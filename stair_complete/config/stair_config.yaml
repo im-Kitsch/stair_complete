@@ -1,0 +1,18 @@
+## Temporally not used
+##stair configuration
+#stair_num: 2
+#stair_length: 0.864 # meter, measured value 1.164
+#stair_width: 0.244 # meter, measured value 0.244
+#stair_height: 0.126 # meter, measured value 0.126
+#
+## initial position
+#init_x: -2.3
+#init_y: 0.8
+#init_z: -0.1
+#init_yaw: 0.0
+#init_pitch: 0.0
+#init_roll: -155.0
+#
+## meshgrid configuration
+#
+#mesh_resolution: 0.24 # not bad 0.15

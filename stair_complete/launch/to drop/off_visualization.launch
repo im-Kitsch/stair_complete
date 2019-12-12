@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<launch>
+
+    <rosparam file="$(find stair_detection)/config/stair_config.yaml" command="load" />  
+ 
+    <node pkg="rosservice" type="rosservice" name="gene_mesh" args="call /voxblox_node/generate_mesh"/>
+
+    <node pkg="stair_detection" type="stair_detection_online" name="opt_node" output="screen">
+         
+    </node>
+
+
+    <node pkg="stair_detection" type="visualizer" name="visualizer" />
+      
+</launch>
+
