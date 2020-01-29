@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<launch>
+<!--    <rosparam data_param="$(find stair_complete)/data"  />-->
+    <param name="data_file" value="$(find stair_complete)/data/data.csv" />
+    <param name="result_file" value="$(find stair_complete)/data/result.csv" />
+    <param name="tsdf_save_path" value="$(find stair_complete)/saved_layer/big_truncation.vxblx" />
+
+<!--    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find stair_complete)/config/offline_opt_visual.rviz" />-->
+
+<!--    <node pkg="rqt_reconfigure" type="rqt_reconfigure" name="rqt_reconfigure" />-->
+
+    <node name="tf_world_set" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 1 world odom 10" />
+
+    <node pkg="stair_complete" type="data_analysis_node" name="offline_opt" output="screen" launch-prefix="gnome-terminal -e"/>
+
+</launch>

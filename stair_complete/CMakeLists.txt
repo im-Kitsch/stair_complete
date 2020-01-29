@@ -118,7 +118,7 @@ find_package(Boost REQUIRED COMPONENTS system)
 ## Generate dynamic reconfigure parameters in the 'cfg' folder
 generate_dynamic_reconfigure_options(
   config/offline_dyn_para.cfg
-  config/Tutorials.cfg
+#  config/Tutorials.cfg
 )
 
 ###################################
@@ -150,26 +150,20 @@ include_directories(
 )
 ## Specify additional locations of header files
 set(HEADERS
-#  include/handle_pointcloud.h
-#  include/Visualizer.h
-#  include/stair_optimizer.h
-#  include/stair_optimizer_util.h
    include/parameter.h
    include/visualizer.h
-   include/util.h
    include/tsdf_load_util.h
    include/stair_mesh_util.h
    include/stair_optimizer.h
+   include/stair_completion.h
 )
 
 set(SOURCES
-#  src/handle_pointcloud.cpp
-#  src/stair_optimizer.cpp
-#  src/stair_optimizer_util.cpp
-#  src/Visualizer.cpp
    src/parameter.cpp
    src/visualizer.cpp
    src/stair_optimizer.cpp
+   src/stair_completion.cpp
+   src/stair_mesh_util.cpp
 )
 
 ## Declare a C++ library
@@ -186,8 +180,6 @@ add_library(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
 #add_executable(${PROJECT_NAME}_online src/stair_detection_online.cpp)
-#add_executable(visualization_node src/visualization_node.cpp)
-#add_executable(offline_opt_node src/offline_opt_node.cpp)
 add_executable(offline_opt_node src/offline_opt_node.cpp )
 add_executable(data_analysis_node src/data_analysis_node.cpp)
 
@@ -202,7 +194,6 @@ add_executable(data_analysis_node src/data_analysis_node.cpp)
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(offline_opt_node ${PROJECT_NAME}_gencfg)
 add_dependencies(data_analysis_node ${PROJECT_NAME}_gencfg)
-#add_dependencies(server.py ${PROJECT_NAME}_gencfg)
 
 ## Specify libraries to link a library or executable target against
 # target_link_libraries(${PROJECT_NAME}_node
@@ -214,7 +205,6 @@ target_link_libraries(${PROJECT_NAME} ${PCL_LIBRARIES} )
 target_link_libraries(${PROJECT_NAME} ${CERES_LIBRARIES})
 
 #target_link_libraries(${PROJECT_NAME}_online ${PROJECT_NAME})
-#target_link_libraries(visualization_node ${PROJECT_NAME})
 target_link_libraries(offline_opt_node ${catkin_LIBRARIES})
 target_link_libraries(offline_opt_node ${PROJECT_NAME})
 

@@ -17,13 +17,7 @@ using ceres::Problem;
 using ceres::Solver;
 using ceres::Solve;
 
-class Stair_Interpolater_Pseudo{
-public:
-  void value_and_jacobian(const double* r2,
-               double* value,
-               double* jacobian);
-  void test();
-};
+
 
 class Stair_Interpolater4Ceres{
 public:
@@ -71,8 +65,9 @@ public:
     double final_p_rate;
     double init_cost, final_cost;
     int opt_steps;
+    void reset(void){};
 };
-Opt_Record::Opt_Record() {}
+
 
 class StairOptimizer {
 public:
@@ -89,7 +84,5 @@ public:
 
   Opt_Record opt_record;
 };
-
-//void optimizer_pseudo_test();
 
 #endif

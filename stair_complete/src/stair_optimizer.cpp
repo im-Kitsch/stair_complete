@@ -17,24 +17,16 @@ using ceres::Solver;
 using ceres::Solve;
 using ceres::CauchyLoss;
 
-//deprecated
-void Stair_Interpolater_Pseudo::value_and_jacobian(const double* r2,
-             double* value,
-             double* jacobian){
-  *value = r2[0] + r2[1] + r2[2];
-
-  if (!jacobian){
-    return;
-  }
-  else {
-    jacobian[0] = 1.;
-    jacobian[1] = 1.;
-    jacobian[2] = 1.;
-    return;
-  }
-}
-void Stair_Interpolater_Pseudo::test(){};
-
+/*
+ * this file mainly optimize the problem
+ * min J = min 1/2 * sum_i[ SDF(Rot*vec_p_i+x_trans ) ]
+ * optimization variable is x_trans
+ * the concrete description is written in the paper
+ *
+ * To read the code, I highly recommend to firstly read this link
+ * http://ceres-solver.org/interfacing_with_autodiff.html
+ * The code struct of this file is mostly identical with the example in the link
+ */
 
 // -----------------------------------------------------------
 
@@ -184,3 +176,5 @@ void StairOptimizer::opt_epoc(int max_num_ite, bool report){
     opt_record.final_cost=summary.final_cost;
     opt_record.opt_steps=summary.num_successful_steps;
 }
+
+Opt_Record::Opt_Record() {};

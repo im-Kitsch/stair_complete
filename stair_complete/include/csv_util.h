@@ -10,6 +10,12 @@
 
 using namespace Eigen;
 
+/*
+ * functions about .csv files
+ * read write .csv file
+ * found in stackflow
+ */
+
 template<typename M>
 M load_csv (const std::string & path) {
     std::ifstream indata;

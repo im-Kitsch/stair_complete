@@ -12,6 +12,11 @@
 #include <voxblox_ros/mesh_vis.h>
 #include <voxblox/io/layer_io.h>
 
+/*
+ * functions for loading tsdf file,
+ * copied from TUD laboratory SIM
+ */
+
 void loadTsdf(const std::shared_ptr<voxblox::TsdfMap> &tsdf, float truncation_distance, bool publish_mesh);
 bool loadTsdfFromFile(std::string tsdf_file_path, float truncation_distance, bool publish_mesh);
 void publishMesh(ros::Publisher &pub, const std::shared_ptr<voxblox::MeshLayer> &mesh, std::string frame_id);
@@ -31,19 +36,19 @@ void loadTsdf(const std::shared_ptr<voxblox::TsdfMap> &tsdf, float truncation_di
     }
 }
 
-//TODO faild to return interpolater
-bool loadTsdfFromFile(std::string tsdf_file_path, float truncation_distance, bool publish_mesh)
-{
-    voxblox::Layer<voxblox::TsdfVoxel>::Ptr layer_ptr;
-    if (voxblox::io::LoadLayer<voxblox::TsdfVoxel>(tsdf_file_path, &layer_ptr)) {
-        std::shared_ptr<voxblox::TsdfMap>  tsdf = std::make_shared<voxblox::TsdfMap>(layer_ptr);
-        loadTsdf(tsdf, truncation_distance, publish_mesh);
-    } else {
-        ROS_ERROR_STREAM("Failed to load tsdf from file.");
-        return false;
-    }
-    return true;
-}
+//faild to return interpolator using this function, this function is not used
+//bool loadTsdfFromFile(std::string tsdf_file_path, float truncation_distance, bool publish_mesh)
+//{
+//    voxblox::Layer<voxblox::TsdfVoxel>::Ptr layer_ptr;
+//    if (voxblox::io::LoadLayer<voxblox::TsdfVoxel>(tsdf_file_path, &layer_ptr)) {
+//        std::shared_ptr<voxblox::TsdfMap>  tsdf = std::make_shared<voxblox::TsdfMap>(layer_ptr);
+//        loadTsdf(tsdf, truncation_distance, publish_mesh);
+//    } else {
+//        ROS_ERROR_STREAM("Failed to load tsdf from file.");
+//        return false;
+//    }
+//    return true;
+//}
 
 std::shared_ptr<voxblox::MeshLayer> computeMesh(const std::shared_ptr<voxblox::TsdfMap> &tsdf)
 {
