@@ -1,6 +1,0 @@
-just save some commands may be used later
-
-
-<rosparam file="$(find stair_complete)/config/stair_config_last.yaml" command="load" />
-
-<rosparam command="dump" file="$(find stair_complete)/config/stair_config_last.yaml" ns = "/offline_opt"/>

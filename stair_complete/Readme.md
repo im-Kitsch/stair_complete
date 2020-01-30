@@ -1,10 +1,16 @@
 # 1. Installation
- 1. Copy  files to ROS_PATH/catkin_ws/src
+Requirement:
 
- 2. cd to catkin_ws/
+ROS-Kinetic,
 
- 3. in terminal run 
-    
+Voxblox https://voxblox.readthedocs.io/en/latest/pages/Installation.html
+
+Ceres-Solver http://ceres-solver.org/installation.html
+
+  1. Copy  files to ROS_PATH/catkin_ws/src
+  2. cd to catkin_ws/
+  3. in terminal run 
+
 ```bash
       	$ catkin build voxblox_ros stair_complete
 ```

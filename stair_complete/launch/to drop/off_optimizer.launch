@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-
-<launch>
-
-
-    <node pkg="rosservice" type="rosservice" name="gene_mesh" args="call /voxblox_node/publish_map"/>
-
-</launch>
-
