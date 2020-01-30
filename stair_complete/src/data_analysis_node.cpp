@@ -80,7 +80,11 @@ int main(int argc,char **argv){
 
         Opt_Record my_record;
         st_complete.stair_completion(config, my_record);
-//        Opt_Record my_record =  dyn_callback(config, 0);
+
+//        st_complete.dyn_callback(config, 0);
+//        Opt_Record my_record = st_complete.opt_record;
+////      Another possibility to call the optimization
+
         total_record(i, 0) = my_record.init_x;
         total_record(i, 1) = my_record.init_y;
         total_record(i, 2) = my_record.init_z;

@@ -38,7 +38,7 @@ void Stair_Interpolater4Ceres::value_and_jacobian(const double* r2,
 
   pos<< r2[0], r2[1], r2[2] ;
 
-  //TODO to check and rewrite here
+
   bool rightness;
   rightness = interpolator_->getDistance(pos, &distance, true);
 
@@ -86,7 +86,8 @@ bool InterpolatorToCeresFunction::Evaluate(double const* const* parameters,
 // -----------------------------------------------------------
 
 
-Affine2DWithDistortion::Affine2DWithDistortion(const double theta_in[3], Stair_Interpolater4Ceres* interpolater_in) {  //TODO should be const
+Affine2DWithDistortion::Affine2DWithDistortion(const double theta_in[3], Stair_Interpolater4Ceres* interpolater_in) {
+
   theta_[0] = theta_in[0];
   theta_[1] = theta_in[1];
   theta_[2] = theta_in[2];
@@ -115,7 +116,9 @@ bool Affine2DWithDistortion::operator()(const T* x,
 
 StairOptimizer::StairOptimizer(const Eigen::MatrixXf& mesh, Stair_Interpolater4Ceres* interpolater_in, double* var_start){
 
-//    google::InitGoogleLogging(argv[0]);  //TODO don't know the meanning of here, especially the input argv[0] as input of main function
+//    google::InitGoogleLogging(argv[0]);
+//  don't know the meanning of here
+// but just copied from template
 
   stair_interpolater_ = interpolater_in;
   opt_variable = var_start;
@@ -123,11 +126,9 @@ StairOptimizer::StairOptimizer(const Eigen::MatrixXf& mesh, Stair_Interpolater4C
   double theta_i[3];
   for(int i=0; i<mesh.rows(); i++){
 
-    theta_i[0] = mesh(i, 0); //ugly implementation TODO to improve
+    theta_i[0] = mesh(i, 0); //although ugly implementation
     theta_i[1] = mesh(i, 1);
     theta_i[2] = mesh(i, 2);
-
-    //TODO to check the code of loss function here
 
     problem.AddResidualBlock(
             new AutoDiffCostFunction<Affine2DWithDistortion, 1, 3>(

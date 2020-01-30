@@ -119,12 +119,12 @@ void Stair_Visualizer::pub_pose(double length, double width, double height, int 
     Stair_Pub.publish(markerArray);
 }
 
-Stair_Visualizer::Stair_Visualizer(std::string topic, double alpha) {
+Stair_Visualizer::Stair_Visualizer(std::string topic, double alpha, std::string frame_id) {
 
     Stair_Pub = nh.advertise<visualization_msgs::MarkerArray>(topic, 40, true);
 
-    marker1.header.frame_id="/odom";  //TODO to change as parameter
-    marker2.header.frame_id="/odom";
+    marker1.header.frame_id=frame_id;  //TODO to change as parameter
+    marker2.header.frame_id=frame_id;
 
     marker1.ns = "basic_shapes";
     marker2.ns = "basic_shapes";
@@ -146,17 +146,17 @@ Stair_Visualizer::Stair_Visualizer(std::string topic, double alpha) {
     marker2.color.b = 0;
 }
 
-Grad_Visualizer::Grad_Visualizer(std::string topic) {
+Grad_Visualizer::Grad_Visualizer(std::string topic, std::string frame_id) {
     markerArrayPub = nh.advertise<visualization_msgs::MarkerArray>(topic, 40, true);
 
-    marker.header.frame_id="/odom";  //TODO to change as parameter
+    marker.header.frame_id=frame_id;  //TODO to change as parameter
     marker.ns = "basic_shapes";
     marker.type = visualization_msgs::Marker::ARROW;
     marker.action = visualization_msgs::Marker::ADD; // Attention here!
 
-    marker.scale.x = 0.005;
-    marker.scale.y = 0.04;
-    marker.scale.z = 0.005;
+    marker.scale.x = 0.002;
+    marker.scale.y = 0.01;
+    marker.scale.z = 0.025;
 }
 
 void Grad_Visualizer::pub_grad_pose_grad(const MatrixXd &pose, const MatrixXd &grad, const MatrixXd& reliability){

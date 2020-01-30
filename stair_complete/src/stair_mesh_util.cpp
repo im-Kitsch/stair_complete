@@ -27,7 +27,7 @@ using namespace Eigen;
  *        pose, stair position
  *        interpolator
  */
-void report_info(MatrixXd& meshgrid_rotated, double pose[3], voxblox::Interpolator<voxblox::TsdfVoxel> &interpolator) //TODO to package and change it
+void report_info(MatrixXd& meshgrid_rotated, double pose[3], voxblox::Interpolator<voxblox::TsdfVoxel> &interpolator)
 {
     int num_rows = meshgrid_rotated.rows();
     RowVector3d trans_vec;

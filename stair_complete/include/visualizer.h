@@ -48,14 +48,14 @@ private:
     ros::NodeHandle nh;
     ros::Publisher Stair_Pub;
 public:
-    Stair_Visualizer(std::string const topic= "a", double alpha=0.5);
+    Stair_Visualizer(std::string const topic= "a", double alpha=0.5, std::string frame_id="/odom");
     void pub_pose(double length, double width, double height, int num, double pose[3], tf2::Quaternion orientation);
 };
 
 
 class Grad_Visualizer{
 public:
-    Grad_Visualizer(std::string topic);
+    Grad_Visualizer(std::string topic, std::string frame_id="/odom");
     void pub_grad_pose_pose(MatrixXd &meshgrid);
     void pub_grad_pose_grad(const MatrixXd &pose, const MatrixXd &grad, const MatrixXd& reliability);
 
