@@ -12,7 +12,7 @@ Ceres-Solver http://ceres-solver.org/installation.html
   3. in terminal run 
 
 ```bash
-      	$ catkin build voxblox_ros stair_complete
+		$ catkin build voxblox_ros stair_complete
 ```
 
 # 2. Run the demo
@@ -66,7 +66,7 @@ There are two methods to
    *Stair_Complete* wraps *Stair_Optimizer* and features like loading tsdf layer, generating meshgrid.  
 
    ```C++
-StairComplete st_complete;
+   StairComplete st_complete;
    stair_complete::offline_dyn_paraConfig config;
    ```
    
