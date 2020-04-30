@@ -167,6 +167,7 @@ void stair_mesh_base(double length, double width, double height, int stair_num, 
             meshgrid(i,0)  = 0.0;
             meshgrid(i,1)  += step;
 
+            // TODO a bug is here, e.g. width = 0.24 and mesh resolution is 0.12
             if ( fmod(meshgrid(i,1)  , width) < step) {
                 if ( fmod(meshgrid(i,1)  , width) > 0.)
                     meshgrid(i,2)  += height;

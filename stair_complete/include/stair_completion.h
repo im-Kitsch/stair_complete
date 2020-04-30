@@ -35,6 +35,7 @@ public:
     int dyn_callback(stair_complete::offline_dyn_paraConfig &config, uint32_t level){
         stair_completion(config, opt_record);
     }
+    
 };
 
 #endif //STAIR_COMPLETE_STAIR_COMPLETION_H

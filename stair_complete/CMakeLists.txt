@@ -182,6 +182,7 @@ add_library(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 #add_executable(${PROJECT_NAME}_online src/stair_detection_online.cpp)
 add_executable(offline_opt_node src/offline_opt_node.cpp )
 add_executable(data_analysis_node src/data_analysis_node.cpp)
+add_executable(baseline_node src/baseline_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -210,6 +211,9 @@ target_link_libraries(offline_opt_node ${PROJECT_NAME})
 
 target_link_libraries(data_analysis_node ${catkin_LIBRARIES})
 target_link_libraries(data_analysis_node ${PROJECT_NAME})
+
+target_link_libraries(baseline_node ${catkin_LIBRARIES})
+target_link_libraries(baseline_node ${PROJECT_NAME})
 
 
 

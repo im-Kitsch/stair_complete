@@ -13,6 +13,7 @@ Parameter::Parameter(stair_complete::offline_dyn_paraConfig &config) {
     stair_num = config.stair_num;
     mesh_resolution = config.mesh_resolution;
 
+
     RowVector3d offset_row;
     vec_tf_from_rotation(offset_row, config.offset_x, config.offset_y, config.offset_z,
                          config.init_yaw, config.init_pitch, config.init_roll);

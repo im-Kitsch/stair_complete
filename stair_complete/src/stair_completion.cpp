@@ -69,7 +69,7 @@ int StairComplete::stair_completion(stair_complete::offline_dyn_paraConfig &conf
     double init_p_rate, final_p_rate;
     init_p_rate = get_reliable_point_rate(mesh_rotated, para.stair_init_pos, interpolator);
 
-    //------report information after optimization-------------
+    //------report information before optimization-------------
     cout<<"before optimization"<<endl;
     stair_vis.pub_pose(config.stair_length, config.stair_width, config.stair_height,
                        config.stair_num, st_init_pos, para.quad);
@@ -106,6 +106,8 @@ int StairComplete::stair_completion(stair_complete::offline_dyn_paraConfig &conf
     ROS_INFO("call back ends");
     return 0;
 };
+
+
 
 
 

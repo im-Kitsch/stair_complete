@@ -29,7 +29,12 @@ plt.plot(y, label="mesh resolution")
 plt.plot([9, 9], [0, 5], "--")
 
 plt.ylim(0, 0.5)
+plt.xlim(0, 19)
 
 plt.legend(loc='upper right')
+
+num_sample = len(y)
+plt.xticks([0, 4.75, 4.75*2, 4.75*3, 4.75*4],
+           ["0% \n min", "25%", "50%", "75%", "100% \n max"])
 plt.show()
 

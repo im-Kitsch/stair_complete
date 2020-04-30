@@ -34,6 +34,7 @@ public:
     double mesh_resolution; // the metric to split stair, unit in meter
     double stair_length, stair_width, stair_height;
     int stair_num;
+
     double truncation_distance;
     tf2::Quaternion quad; // stair direction, saved in quaternion
     MatrixXd mesh_base;
