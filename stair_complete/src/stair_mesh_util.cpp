@@ -142,6 +142,7 @@ void stair_mesh_base2rotation(MatrixXd& meshgrid_base, MatrixXd& meshgrid_actual
     MatrixXd rot_mat(3, 3);
     tf2_quad_to_eigen_matrix(quad, rot_mat);
     meshgrid_actual = meshgrid_base * rot_mat.transpose();
+    std::cout<<"rotation matrix"<<std::endl<<rot_mat<<std::endl;
 }
 
 // normal method for generating meshgrid points

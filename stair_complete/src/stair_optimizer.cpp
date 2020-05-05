@@ -5,6 +5,9 @@
 #include <voxblox_ros/conversions.h>
 #include <voxblox_ros/conversions_inl.h>
 
+#include <math.h>
+#include <angles/angles.h>
+
 #include "ceres/ceres.h"
 #include "glog/logging.h"
 
@@ -86,25 +89,29 @@ bool InterpolatorToCeresFunction::Evaluate(double const* const* parameters,
 // -----------------------------------------------------------
 
 
-Affine2DWithDistortion::Affine2DWithDistortion(const double theta_in[3], Stair_Interpolater4Ceres* interpolater_in) {
+Residual_xyz::Residual_xyz(const double ref_pos_in[3], const double ref_rot_in,
+                           Stair_Interpolater4Ceres* interpolater_in) {
 
-  theta_[0] = theta_in[0];
-  theta_[1] = theta_in[1];
-  theta_[2] = theta_in[2];
+    ref_rot = ref_rot_in;
+    ref_pos[0] = ref_pos_in[0] * cos(ref_rot) - ref_pos_in[1] * sin(ref_rot) ;
+    ref_pos[1] = ref_pos_in[0] * sin(ref_rot) + ref_pos_in[1] * cos(ref_rot);
+    ref_pos[2] = ref_pos_in[2];
 
-  stair_interpolater_ =  interpolater_in;
+    std::cout<<"mesh"<<ref_pos[0]<<" "<<ref_pos[1]<<" "<<ref_pos[2]<<std::endl;
 
-  compute_distortion.reset(
+    stair_interpolater_ =  interpolater_in;
+
+    compute_distortion.reset(
           new ceres::CostFunctionToFunctor<1, 3>(new InterpolatorToCeresFunction(stair_interpolater_)));
-    }
+}
 
 template <typename T>
-bool Affine2DWithDistortion::operator()(const T* x,
+bool Residual_xyz::operator()(const T* x,
                 T* residuals) const {
   T q[3];
-  q[0] = theta_[0] + x[0];// * theta_[0] + theta_[0] * theta_[1] * theta_[2];
-  q[1] = theta_[1] + x[1];// * theta_[1];
-  q[2] = theta_[2] + x[2];// * theta_[2];
+  q[0] = ref_pos[0] + x[0];
+  q[1] = ref_pos[1] + x[1];
+  q[2] = ref_pos[2] + x[2];
   T residual;
   (*compute_distortion)(q, residuals);
 
@@ -113,8 +120,37 @@ bool Affine2DWithDistortion::operator()(const T* x,
 
 // -----------------------------------------------------------
 
+Residual_xyz_rot::Residual_xyz_rot(const double ref_pos_in[3],
+                                   Stair_Interpolater4Ceres* interpolater_in) {
 
-StairOptimizer::StairOptimizer(const Eigen::MatrixXf& mesh, Stair_Interpolater4Ceres* interpolater_in, double* var_start){
+    ref_pos[0] = ref_pos_in[0];
+    ref_pos[1] = ref_pos_in[1];
+    ref_pos[2] = ref_pos_in[2];
+
+    stair_interpolater_ =  interpolater_in;
+
+    compute_distortion.reset(
+            new ceres::CostFunctionToFunctor<1, 3>(new InterpolatorToCeresFunction(stair_interpolater_)));
+}
+
+template <typename T>
+bool Residual_xyz_rot::operator()(const T* opt_pos, const T* opt_rot,
+                              T* residuals) const {
+    T q[3];
+    q[0] = ref_pos[0] * cos(opt_rot[0]) - ref_pos[1] * sin(opt_rot[0]) + opt_pos[0];
+    q[1] = ref_pos[0] * sin(opt_rot[0]) + ref_pos[1] * cos(opt_rot[0]) + opt_pos[1];
+    q[2] = ref_pos[2] + opt_pos[2];
+    T residual;
+    (*compute_distortion)(q, residuals);
+
+    return true;
+}
+
+// -----------------------------------------------------------
+
+
+StairOptimizer::StairOptimizer(const Eigen::MatrixXf& mesh, Stair_Interpolater4Ceres* interpolater_in,
+                               double* var_start, double* var_rot_in){
 
 //    google::InitGoogleLogging(argv[0]);
 //  don't know the meanning of here
@@ -122,21 +158,30 @@ StairOptimizer::StairOptimizer(const Eigen::MatrixXf& mesh, Stair_Interpolater4C
 
   stair_interpolater_ = interpolater_in;
   opt_variable = var_start;
+  opt_rot = var_rot_in;
 
   double theta_i[3];
-  for(int i=0; i<mesh.rows(); i++){
+  for(int i=0; i < mesh.rows(); i++){
 
     theta_i[0] = mesh(i, 0); //although ugly implementation
     theta_i[1] = mesh(i, 1);
     theta_i[2] = mesh(i, 2);
+    if (false){
+        problem.AddResidualBlock(
+                new AutoDiffCostFunction<Residual_xyz, 1, 3>(
+                        new Residual_xyz(theta_i, angles::from_degrees(-155.),  stair_interpolater_)),
+                new CauchyLoss(0.5), //NULL,
+                opt_variable);
+    } else{
+        problem.AddResidualBlock(
+                new AutoDiffCostFunction<Residual_xyz_rot, 1, 3, 1>(
+                        new Residual_xyz_rot(theta_i, stair_interpolater_)),
+                new CauchyLoss(0.5), //NULL,
+                opt_variable, opt_rot);
+    }
 
-    problem.AddResidualBlock(
-            new AutoDiffCostFunction<Affine2DWithDistortion, 1, 3>(
-                new Affine2DWithDistortion(theta_i, stair_interpolater_)),
-            new CauchyLoss(0.5), //NULL,
-            opt_variable);
   }
-  options.max_num_iterations = 100;
+//  options.max_num_iterations = 100;
   options.linear_solver_type = ceres::DENSE_QR;
   options.minimizer_progress_to_stdout = true;
 }
@@ -160,6 +205,8 @@ void StairOptimizer::opt_epoc(int max_num_ite, bool report){
     <<"  "<<original_st[0]<<"  "<<original_st[1]<<"  "<<original_st[2]
     <<"  "<<opt_variable[0]<<"  "<<opt_variable[1]<<"  "<<opt_variable[2]
     <<"  "<<summary.final_cost<<std::endl;
+
+    std::cout<<"final roation"<<angles::to_degrees(opt_rot[0])<<std::endl<<std::endl;
     ROS_INFO("original final init_cost final_cost");
     ROS_INFO("%f %f %f %f %f %f %f %f", original_st[0], original_st[1], original_st[2],
              opt_variable[0], opt_variable[1], opt_variable[2], summary.initial_cost,summary.final_cost);

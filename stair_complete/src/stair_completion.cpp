@@ -65,6 +65,7 @@ int StairComplete::stair_completion(stair_complete::offline_dyn_paraConfig &conf
     stair_mesh_base2rotation(para.mesh_base, mesh_rotated, para.quad);
 
     double st_init_pos[3] = {para.stair_init_pos[0], para.stair_init_pos[1], para.stair_init_pos[2]};
+    double init_rot[1] = {para.stair_rot};
 
     double init_p_rate, final_p_rate;
     init_p_rate = get_reliable_point_rate(mesh_rotated, para.stair_init_pos, interpolator);
@@ -78,6 +79,8 @@ int StairComplete::stair_completion(stair_complete::offline_dyn_paraConfig &conf
         report_info(mesh_rotated, para.stair_init_pos, interpolator);
     // --------------------------------------------------
 
+
+
     //stop optimization if optimization is not used
     if (!config.do_optimization)
         return 0;
@@ -85,11 +88,13 @@ int StairComplete::stair_completion(stair_complete::offline_dyn_paraConfig &conf
     //-------begin optimization ---------------
     Stair_Interpolater4Ceres stair_interpolator4ceres;
     stair_interpolator4ceres.set_interpolator(&interpolator);
-    StairOptimizer stair_optimizer(mesh_rotated.cast <float> (), &stair_interpolator4ceres, st_init_pos);
+    StairOptimizer stair_optimizer(para.mesh_base.cast <float> (), &stair_interpolator4ceres,
+                                   st_init_pos, init_rot);
     stair_optimizer.opt_epoc(config.m_opt_loop_n);
 
     //------report information after optimization-------------
     cout<<"after optimization"<<endl;
+    para.quad.setEuler(0, 0, stair_optimizer.opt_rot[0]);
     visualize_grad(para, interpolator, grad_vis_opted, st_init_pos);
     stair_vis_opted.pub_pose(para.stair_length, para.stair_width, para.stair_height,
                              para.stair_num, st_init_pos, para.quad);

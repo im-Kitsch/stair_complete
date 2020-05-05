@@ -33,6 +33,7 @@ public:
     double stair_init_pos[3]; // initial position x, y, z in meter
     double mesh_resolution; // the metric to split stair, unit in meter
     double stair_length, stair_width, stair_height;
+    double stair_rot;
     int stair_num;
 
     double truncation_distance;

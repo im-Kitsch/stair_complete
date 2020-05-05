@@ -21,39 +21,39 @@ using ceres::Solve;
 
 class Stair_Interpolater4Ceres{
 public:
-  void value_and_jacobian(const double* r2,
-               double* value,
-               double* jacobian);
-  void set_interpolator(voxblox::Interpolator<voxblox::TsdfVoxel>* interpolator_in);
-  void test();
-  voxblox::Interpolator<voxblox::TsdfVoxel>* interpolator_;
+    void value_and_jacobian(const double* r2,
+                            double* value,
+                            double* jacobian);
+    void set_interpolator(voxblox::Interpolator<voxblox::TsdfVoxel>* interpolator_in);
+    void test();
+    voxblox::Interpolator<voxblox::TsdfVoxel>* interpolator_;
 };
 
 
 
 class InterpolatorToCeresFunction : public ceres::SizedCostFunction<1, 3> {
- public:
-  InterpolatorToCeresFunction(Stair_Interpolater4Ceres* interpolater_in);
+public:
+    InterpolatorToCeresFunction(Stair_Interpolater4Ceres* interpolater_in);
 
 
-  virtual bool Evaluate(double const* const* parameters,
-                        double* residuals,
-                        double** jacobians) const;
+    virtual bool Evaluate(double const* const* parameters,
+                          double* residuals,
+                          double** jacobians) const;
 private:
-  Stair_Interpolater4Ceres* stair_interpolater_;
+    Stair_Interpolater4Ceres* stair_interpolater_;
 };
 
 
 struct Affine2DWithDistortion {
-  Affine2DWithDistortion(const double theta_in[3], Stair_Interpolater4Ceres* interpolater_in) ;
+    Affine2DWithDistortion(const double theta_in[3], Stair_Interpolater4Ceres* interpolater_in) ;
 
-  template <typename T>
-  bool operator()(const T* x,
-                  T* residuals) const ;
+    template <typename T>
+    bool operator()(const T* x,
+                    T* residuals) const ;
 
-  std::unique_ptr<ceres::CostFunctionToFunctor<1, 3> > compute_distortion;
-  double theta_[3];
-  Stair_Interpolater4Ceres* stair_interpolater_;
+    std::unique_ptr<ceres::CostFunctionToFunctor<1, 3> > compute_distortion;
+    double theta_[3];
+    Stair_Interpolater4Ceres* stair_interpolater_;
 };
 
 class Opt_Record{
@@ -71,21 +71,18 @@ public:
 
 class StairOptimizer {
 public:
-  StairOptimizer(const Eigen::MatrixXf& mesh, Stair_Interpolater4Ceres* interpolater_in, double* var_start);
+    StairOptimizer(const Eigen::MatrixXf& mesh, Stair_Interpolater4Ceres* interpolater_in, double* var_start);
 
-  void opt_epoc(int max_num_ite=100, bool report=true);
+    void opt_epoc(int max_num_ite=100, bool report=true);
 
-  Problem problem;
-  Solver::Options options;
-  Solver::Summary summary;
+    Problem problem;
+    Solver::Options options;
+    Solver::Summary summary;
 
-  Stair_Interpolater4Ceres* stair_interpolater_;
-  double* opt_variable;
-  double* opt_rotation;
+    Stair_Interpolater4Ceres* stair_interpolater_;
+    double* opt_variable;
 
-  bool if_opt_rotation_;
-
-  Opt_Record opt_record;
+    Opt_Record opt_record;
 };
 
 #endif

@@ -44,16 +44,29 @@ private:
 };
 
 
-struct Affine2DWithDistortion {
-  Affine2DWithDistortion(const double theta_in[3], Stair_Interpolater4Ceres* interpolater_in) ;
+struct Residual_xyz {
+    Residual_xyz(const double ref_pos_in[3], const double ref_rot_in, Stair_Interpolater4Ceres* interpolater_in);
 
-  template <typename T>
-  bool operator()(const T* x,
-                  T* residuals) const ;
+    template <typename T>
+      bool operator()(const T* x,
+                      T* residuals) const ;
 
-  std::unique_ptr<ceres::CostFunctionToFunctor<1, 3> > compute_distortion;
-  double theta_[3];
-  Stair_Interpolater4Ceres* stair_interpolater_;
+      std::unique_ptr<ceres::CostFunctionToFunctor<1, 3> > compute_distortion;
+      double ref_pos[3];
+      double ref_rot;
+      Stair_Interpolater4Ceres* stair_interpolater_;
+};
+
+struct Residual_xyz_rot {
+    Residual_xyz_rot(const double ref_pos_in[3], Stair_Interpolater4Ceres* interpolater_in) ;
+
+    template <typename T>
+    bool operator()(const T* opt_pos, const T* opt_rot,
+                    T* residuals) const ;
+
+    std::unique_ptr<ceres::CostFunctionToFunctor<1, 3> > compute_distortion;
+    double ref_pos[3];
+    Stair_Interpolater4Ceres* stair_interpolater_;
 };
 
 class Opt_Record{
@@ -71,7 +84,8 @@ public:
 
 class StairOptimizer {
 public:
-  StairOptimizer(const Eigen::MatrixXf& mesh, Stair_Interpolater4Ceres* interpolater_in, double* var_start);
+  StairOptimizer(const Eigen::MatrixXf& mesh, Stair_Interpolater4Ceres* interpolater_in,
+                 double* var_start, double* var_rot_in);
 
   void opt_epoc(int max_num_ite=100, bool report=true);
 
@@ -81,6 +95,7 @@ public:
 
   Stair_Interpolater4Ceres* stair_interpolater_;
   double* opt_variable;
+  double* opt_rot;
 
   Opt_Record opt_record;
 };

@@ -43,6 +43,7 @@ Parameter::Parameter(stair_complete::offline_dyn_paraConfig &config) {
             angles::from_degrees(init_pitch),
             angles::from_degrees(init_roll)
     );
+    stair_rot = angles::from_degrees(init_roll);
 
 }
 
